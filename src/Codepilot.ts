@@ -5,23 +5,12 @@ import * as readline from "readline";
 import { CodeIndex } from "./CodeIndex";
 import { SourceCodeSection } from "./SourceCodeSection";
 
-export interface CodepilotConfig {
-    apiKey: string;
-    model: string;
-    max_input_tokens: number;
-    max_tokens: number;
-    temperature: number;
-    folderPath?: string;
-}
-
 export class Codepilot {
-    private readonly _config: CodepilotConfig;
-    private readonly _functions: Map<string, FunctionEntry> = new Map();
     private readonly _index: CodeIndex;
+    private readonly _functions: Map<string, FunctionEntry> = new Map();
 
-    public constructor(config: CodepilotConfig) {
-        this._config = config;
-        this._index = new CodeIndex(config.folderPath);
+    public constructor(index: CodeIndex) {
+        this._index = index;
     }
 
     public addFunction<TArgs = Record<string, any>>(schema: ChatCompletionFunction, fn: (args: TArgs) => Promise<any>): this {
@@ -118,12 +107,12 @@ export class Codepilot {
 
         // Create an instance of a model
         return new OpenAIModel({
-            apiKey: this._config.apiKey,
+            apiKey: this._index.keys!.apiKey,
             completion_type: 'chat',
-            model: this._config.model,
-            temperature: this._config.temperature,
-            max_input_tokens: this._config.max_input_tokens,
-            max_tokens: this._config.max_tokens,
+            model: this._index.config!.model,
+            temperature: this._index.config!.temperature,
+            max_input_tokens: this._index.config!.max_input_tokens,
+            max_tokens: this._index.config!.max_tokens,
             functions
         });
     }
