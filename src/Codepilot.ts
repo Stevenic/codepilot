@@ -1,7 +1,9 @@
 import { OpenAIModel, AlphaWave, ChatCompletionFunction } from "alphawave";
-import { Prompt, ConversationHistory, UserMessage, Message } from "promptrix";
+import { Prompt, ConversationHistory, UserMessage, Message, SystemMessage } from "promptrix";
 import { Colorize } from "./internals";
 import * as readline from "readline";
+import { CodeIndex } from "./CodeIndex";
+import { SourceCodeSection } from "./SourceCodeSection";
 
 export interface CodepilotConfig {
     apiKey: string;
@@ -9,14 +11,17 @@ export interface CodepilotConfig {
     max_input_tokens: number;
     max_tokens: number;
     temperature: number;
+    folderPath?: string;
 }
 
 export class Codepilot {
     private readonly _config: CodepilotConfig;
     private readonly _functions: Map<string, FunctionEntry> = new Map();
+    private readonly _index: CodeIndex;
 
     public constructor(config: CodepilotConfig) {
         this._config = config;
+        this._index = new CodeIndex(config.folderPath);
     }
 
     public addFunction<TArgs = Record<string, any>>(schema: ChatCompletionFunction, fn: (args: TArgs) => Promise<any>): this {
@@ -36,7 +41,12 @@ export class Codepilot {
         const wave = new AlphaWave({
             model,
             prompt: new Prompt([
-                new ConversationHistory('history'),
+                new SystemMessage([
+                    `You are an expert software developer.`,
+                    `You are chatting with another developer who is asking for help with the project they're working on.`,
+                ].join('\n')),
+                new SourceCodeSection(this._index, 0.6),
+                new ConversationHistory('history', 0.4),
                 new UserMessage('{{$input}}', 500)
             ])
         });
