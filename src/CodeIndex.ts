@@ -4,6 +4,8 @@ import * as path from 'path';
 
 export interface CodeIndexConfig {
     model: string;
+    max_input_tokens: number;
+    max_tokens: number;
     sources: string[];
     extensions?: string[];
 }

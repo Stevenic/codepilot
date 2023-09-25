@@ -43,7 +43,39 @@ export async function run() {
                 })
                 .demandOption(['key', 'source']);
         }, async (args) => {
-            console.log(Colorize.title('Creating new code index'));
+            console.log(Colorize.title(`Creating new code index`));
+
+            // Create index
+            const index = new CodeIndex();
+            await index.create({ apiKey: args.key as string }, {
+                model: args.model as string,
+                sources: args.source as string[],
+                extensions: args.extension as string[]
+            });
+            console.log(Colorize.output([
+                `I created a new code index under the '${index.folderPath}' folder.`,
+                `You can build your code index now by running:\n`,
+                `codepilot rebuild\n`,
+                `Or add additional sources and/or file extensions by running:\n`,
+                `codepilot add --source <source> --extension <extension>\n`,
+            ].join('\n')));
+        })
+        .command('add', `adds additional sources and/or extensions to your code index`, (yargs) => {
+            return yargs
+                .option('source', {
+                    alias: 's',
+                    array: true,
+                    describe: 'source folder(s) to index.',
+                    type: 'string'
+                })
+                .option('extension', {
+                    alias: 'e',
+                    array: true,
+                    describe: 'extension(s) to filter to.',
+                    type: 'string'
+                })
+        }, async (args) => {
+            console.log(Colorize.title('Updating sources and/or extensions'));
 
             // Create index
             const index = new CodeIndex();
