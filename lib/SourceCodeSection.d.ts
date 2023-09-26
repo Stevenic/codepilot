@@ -1,5 +1,8 @@
 import { Message, PromptFunctions, PromptMemory, PromptSectionBase, RenderedPromptSection, Tokenizer } from "promptrix";
 import { CodeIndex } from "./CodeIndex";
+/**
+ * A section that renders source code snippets from the code index.
+ */
 export declare class SourceCodeSection extends PromptSectionBase {
     private readonly _index;
     /**

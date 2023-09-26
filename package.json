@@ -1,8 +1,8 @@
 {
-    "name": "codepilot",
+    "name": "@stevenic/codepilot",
     "author": "Steven Ickman",
     "description": "Codepilot is a programming buddy that's an expert on your codebase.",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "license": "MIT",
     "keywords": [
         "gpt",
@@ -18,7 +18,7 @@
     "main": "./lib/index.js",
     "types": "./lib/index.d.ts",
     "bin": {
-        "vectra": "./bin/codepilot.js"
+        "codepilot": "./bin/codepilot.js"
     },
     "typesVersions": {
         "<3.9": {
