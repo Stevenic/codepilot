@@ -1,7 +1,15 @@
-import { LocalDocumentIndex, LocalDocumentIndexConfig, FileFetcher, OpenAIEmbeddingsOptions, OpenAIEmbeddings, DocumentQueryOptions, LocalDocumentResult } from "vectra";
+import { LocalDocumentIndex, FileFetcher, OpenAIEmbeddings, DocumentQueryOptions, LocalDocumentResult } from "vectra";
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { Colorize } from "./internals";
+
+const IGNORED_FILES = [
+    '.gif','.jpg','.jpeg','.png','.tiff','.tif','.ico','.svg','.bmp','.webp','.heif','.heic',
+    '.mpeg','.mp4','.webm','.mov','.mkv','.avi','.wmv','.mp3','.wav','.ogg','.midi','.mid','.amr',
+    '.zip','.tar','.gz','.rar','.7z','.xz','.bz2','.iso','.dmg','.bin','.exe','.apk','.torrent',
+];
+
+// LLM-REGION
 
 /**
  * The configuration for a code index.
@@ -38,6 +46,8 @@ export interface CodeIndexConfig {
     extensions?: string[];
 }
 
+// LLM-REGION
+
 /**
  * Keys to use for OpenAI embeddings and models.
  */
@@ -61,6 +71,8 @@ export interface OpenAIKeys {
      */
     endpoint?: string;
 }
+
+// LLM-REGION
 
 /**
  * The current projects source code index.
@@ -99,6 +111,8 @@ export class CodeIndex {
     public get keys(): OpenAIKeys | undefined {
         return this._keys;
     }
+
+    // LLM-REGION
 
     /**
      * Adds sources and extensions to the index.
@@ -144,6 +158,8 @@ export class CodeIndex {
         this._config = newConfig;
     }
 
+    // LLM-REGION
+
     /**
      * Creates a new code index.
      * @param keys OpenAI keys to use.
@@ -181,6 +197,8 @@ export class CodeIndex {
         }
     }
 
+    // LLM-REGION
+
     /**
      * Deletes the current code index.
      */
@@ -190,6 +208,8 @@ export class CodeIndex {
         this._keys = undefined;
         this._index = undefined;
     }
+
+    // LLM-REGION
 
     /**
      * Returns whether a `vectra.keys` file exists for the index.
@@ -204,6 +224,8 @@ export class CodeIndex {
     public async isCreated(): Promise<boolean> {
         return await fs.stat(this.folderPath).then(() => true).catch(() => false);
     }
+
+    // LLM-REGION
 
     /**
      * Loads the current code index.
@@ -231,6 +253,8 @@ export class CodeIndex {
         return this._index;
     }
 
+    // LLM-REGION
+
     /**
      * Queries the code index.
      * @param query Text to query the index with.
@@ -249,6 +273,8 @@ export class CodeIndex {
         const index = await this.load();
         return await index.queryDocuments(query, options);
     }
+
+    // LLM-REGION
 
     /**
      * Rebuilds the code index.
@@ -272,7 +298,12 @@ export class CodeIndex {
         const fetcher = new FileFetcher();
         for (const source of this._config!.sources) {
             await fetcher.fetch(source, async (uri, text, docType) => {
-                // Ignore if extension not allowed
+                // Ignore binary files
+                if (IGNORED_FILES.includes(path.extname(uri))) {
+                    return true;
+                }
+
+                // Ignore any disallowed extensions
                 if (this._config!.extensions && docType && !this._config!.extensions!.includes(docType)) {
                     return true;
                 }
@@ -284,6 +315,8 @@ export class CodeIndex {
             });
         }
     }
+
+    // LLM-REGION
 
     /**
      * Removes sources and extensions from the index.
@@ -317,6 +350,8 @@ export class CodeIndex {
         await fs.writeFile(configPath, JSON.stringify(newConfig));
         this._config = newConfig;
     }
+
+    // LLM-REGION
 
     /**
      * Updates the OpenAI keys for the index.

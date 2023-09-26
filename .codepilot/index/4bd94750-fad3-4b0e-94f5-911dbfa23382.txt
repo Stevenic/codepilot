@@ -4,6 +4,7 @@ import { hideBin } from "yargs/helpers";
 import { Colorize } from "./internals";
 import { CodeIndex, CodeIndexConfig } from "./CodeIndex";
 import { Codepilot } from './Codepilot';
+import { registerFunctions } from './functions';
 
 /**
  * Defines the commands supported by the Codepilot CLI.
@@ -49,6 +50,7 @@ export async function run() {
 
             // Start a Codepilot chat session
             const codepilot = new Codepilot(index);
+            registerFunctions(codepilot);
             await codepilot.chat();
         })
         .command('create', `creates a new code index`, (yargs) => {

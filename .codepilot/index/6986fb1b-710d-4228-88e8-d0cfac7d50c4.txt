@@ -1,7 +1,9 @@
-import { LocalDocumentIndex, LocalDocumentIndexConfig, FileFetcher, OpenAIEmbeddingsOptions, OpenAIEmbeddings, DocumentQueryOptions, LocalDocumentResult } from "vectra";
+import { LocalDocumentIndex, FileFetcher, OpenAIEmbeddings, DocumentQueryOptions, LocalDocumentResult } from "vectra";
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { Colorize } from "./internals";
+
+// LLM-REGION
 
 /**
  * The configuration for a code index.
@@ -38,6 +40,8 @@ export interface CodeIndexConfig {
     extensions?: string[];
 }
 
+// LLM-REGION
+
 /**
  * Keys to use for OpenAI embeddings and models.
  */
@@ -61,6 +65,8 @@ export interface OpenAIKeys {
      */
     endpoint?: string;
 }
+
+// LLM-REGION
 
 /**
  * The current projects source code index.
@@ -99,6 +105,8 @@ export class CodeIndex {
     public get keys(): OpenAIKeys | undefined {
         return this._keys;
     }
+
+    // LLM-REGION
 
     /**
      * Adds sources and extensions to the index.
@@ -144,6 +152,8 @@ export class CodeIndex {
         this._config = newConfig;
     }
 
+    // LLM-REGION
+
     /**
      * Creates a new code index.
      * @param keys OpenAI keys to use.
@@ -181,6 +191,8 @@ export class CodeIndex {
         }
     }
 
+    // LLM-REGION
+
     /**
      * Deletes the current code index.
      */
@@ -190,6 +202,8 @@ export class CodeIndex {
         this._keys = undefined;
         this._index = undefined;
     }
+
+    // LLM-REGION
 
     /**
      * Returns whether a `vectra.keys` file exists for the index.
@@ -204,6 +218,8 @@ export class CodeIndex {
     public async isCreated(): Promise<boolean> {
         return await fs.stat(this.folderPath).then(() => true).catch(() => false);
     }
+
+    // LLM-REGION
 
     /**
      * Loads the current code index.
@@ -225,11 +241,16 @@ export class CodeIndex {
             this._index = new LocalDocumentIndex({
                 folderPath,
                 embeddings,
+                chunkingConfig: {
+                    chunkSize: getOptimalChunkSize(this._config!.model),
+                }
             });
         }
 
         return this._index;
     }
+
+    // LLM-REGION
 
     /**
      * Queries the code index.
@@ -249,6 +270,8 @@ export class CodeIndex {
         const index = await this.load();
         return await index.queryDocuments(query, options);
     }
+
+    // LLM-REGION
 
     /**
      * Rebuilds the code index.
@@ -285,6 +308,8 @@ export class CodeIndex {
         }
     }
 
+    // LLM-REGION
+
     /**
      * Removes sources and extensions from the index.
      * @param config The configuration containing the sources and extensions to remove.
@@ -317,6 +342,8 @@ export class CodeIndex {
         await fs.writeFile(configPath, JSON.stringify(newConfig));
         this._config = newConfig;
     }
+
+    // LLM-REGION
 
     /**
      * Updates the OpenAI keys for the index.
@@ -367,5 +394,15 @@ export class CodeIndex {
         // Write config
         await fs.writeFile(configPath, JSON.stringify(newConfig));
         this._config = newConfig;
+    }
+}
+
+function getOptimalChunkSize(model: string): number {
+    if (model.startsWith('gpt-3.5-turbo-16k')) {
+        return 2000;
+    } else if (model.startsWith('gpt-3.5-turbo')) {
+        return 1000;
+    } else {
+        return 2000;
     }
 }

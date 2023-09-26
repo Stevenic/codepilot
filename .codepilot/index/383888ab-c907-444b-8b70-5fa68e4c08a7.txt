@@ -1,4 +1,4 @@
-import { OpenAIModel, AlphaWave, ChatCompletionFunction } from "alphawave";
+import { OpenAIModel, AlphaWave, ChatCompletionFunction, OpenAIModelOptions } from "alphawave";
 import { Prompt, ConversationHistory, UserMessage, Message, SystemMessage } from "promptrix";
 import { Colorize } from "./internals";
 import * as readline from "readline";
@@ -22,6 +22,8 @@ export class Codepilot {
 
     /**
      * Registers a new function to be used in the chat completion.
+     * @remarks
+     * This is used to add new capabilities to Codepilot's chat feature
      * @param name The name of the function.
      * @param schema The schema of the function.
      * @param fn The function to be executed.
@@ -122,13 +124,14 @@ export class Codepilot {
         }
 
         // Create an instance of a model
-        const modelOptions: any = {
+        const modelOptions: OpenAIModelOptions = {
             apiKey: this._index.keys!.apiKey,
             completion_type: 'chat',
             model: this._index.config!.model,
             temperature: this._index.config!.temperature,
             max_input_tokens: this._index.config!.max_input_tokens,
             max_tokens: this._index.config!.max_tokens,
+            logRequests: true
         };
 
         if (functions.length > 0) {
