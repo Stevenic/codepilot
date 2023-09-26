@@ -2,7 +2,7 @@
     "name": "@stevenic/codepilot",
     "author": "Steven Ickman",
     "description": "Codepilot is a programming buddy that's an expert on your codebase.",
-    "version": "0.1.1",
+    "version": "0.3.0",
     "license": "MIT",
     "keywords": [
         "gpt",
@@ -28,10 +28,10 @@
         }
     },
     "dependencies": {
-        "alphawave": "0.8.1",
+        "alphawave": "0.8.2",
         "json-colorizer": "^2.2.2",
         "promptrix": "0.4.2",
-        "vectra": "^0.4.1",
+        "vectra": "^0.4.4",
         "yargs": "^17.7.2"
     },
     "resolutions": {

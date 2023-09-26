@@ -13,6 +13,8 @@ export declare class Codepilot {
     constructor(index: CodeIndex);
     /**
      * Registers a new function to be used in the chat completion.
+     * @remarks
+     * This is used to add new capabilities to Codepilot's chat feature
      * @param name The name of the function.
      * @param schema The schema of the function.
      * @param fn The function to be executed.
