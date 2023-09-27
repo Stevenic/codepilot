@@ -1,10 +1,10 @@
 # Codepilot Usage
 
-Welcome to the usage guide for Codepilot! Codepilot is a powerful programming tool that serves as your expert companion in navigating and understanding your codebase. With Codepilot, you can harness the power of AI to get instant answers, suggestions, and insights related to your code.
+Welcome to the usage guide for Codepilots Command Line Interface (CLI)! Codepilot is a powerful programming tool that serves as your expert companion in navigating and understanding your codebase. With Codepilot, you can harness the power of AI to get instant answers, suggestions, and insights related to your code.
 
 Whether you're a beginner looking for guidance or an experienced developer seeking to optimize your workflow, Codepilot is here to assist you. From providing code snippets and examples to helping you troubleshoot issues and explore different parts of your codebase, Codepilot is your go-to resource for code-related queries.
 
-In this guide, we'll walk you through the installation process, getting started with Codepilot, utilizing its features, customizing its behavior, and contributing to its development. Let's dive in and unlock the full potential of Codepilot!
+In this guide, we'll walk you through the installation process, getting started with Codepilot, utilizing its features, and customizing its behavior. Let's dive in and unlock the full potential of Codepilot!
 
 ## Installation
 
@@ -45,6 +45,16 @@ To get started with Codepilot, follow these steps:
 8. Codepilot will generate responses based on the context of your question or request.
 
 That's it! You're now ready to use Codepilot to navigate and understand your codebase.
+
+## Working with Codepilot
+
+Here are a few tips to get you started using Codepilot:
+
+- Document your code. Codepilot uses Semantic Search and a local Vector Index to retrieve code related to your request so more comments you have in your code the better the chance that Codepilot will find the code needed to answer your request.
+- Be as specific as you can with your requests. Long descriptions telling Codepilot exactly what you want it to do and which classes or types it should use, will yield better results.
+- Codepilot has a little bit of short term memory that lasts for the duration of current session. If you aren't completely satisfied with the code Codepilot generated just tell it the changes you want it to make.
+- Codepilot also has the ability to create new files in your project so if you see some code you like, just ask it to write it to a file. But keep an eye out because Codepilot will sometimes create files when you don't expect it to.
+- To end the current chat session just say "exit".
 
 ## Adding and Removing Sources
 
@@ -92,6 +102,14 @@ Note: When you add or remove a extension filters from your index, you currently 
 
 ## Setting Models and API Keys
 
-LLM-TODO: write the documentation for this. You can use `codepilot set --key <your OpenAI key>` to update the API key used by Codepilot and `codepilot set --model <OpenAI model name>` to switch to using a different model. Only chat completion models are currently supported.
+To set the API key used by Codepilot, you can use the `codepilot set --key <your OpenAI key>` command. This command allows you to update the API key in the local configuration.
 
-Note: When you switch models, you currently need to manually rebuild it by running `codepilot rebuild`.
+To switch to using a different model, you can use the `codepilot set --model <OpenAI model name>` command. This command allows you to specify the name of the model you want to use.
+
+Note that only chat completion models are currently supported.
+
+When you switch models, you need to manually rebuild the index by running the `codepilot rebuild` command.
+
+## Additional Commands
+
+You can get a full list of commands that Codepilot supports by running `codepilot --help`.

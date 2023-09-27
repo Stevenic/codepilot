@@ -17,7 +17,7 @@ To start a new chat session with Codepilot, simply run the following command fro
 codepilot
 ```
 
-Codepilot will guide you through the steps needed to setup a code index for your repo. You'll need an OpenAI key, which you can [get here](https://platform.openai.com/account/api-keys).
+Codepilot will guide you through the steps needed to setup a code index for your repo. You'll need an OpenAI key, which you can [get here](https://platform.openai.com/account/api-keys). See the [Usage Guide](./docs/cli-usage.md) for additional details on working with Codepilots Chat and Command Line Interfaces.
 
 ## Asking Questions and Making Requests
 

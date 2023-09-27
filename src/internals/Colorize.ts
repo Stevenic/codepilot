@@ -26,6 +26,14 @@ export class Colorize {
     }
 
     /**
+     * Renders the given text with a highlight to call attention.
+     * @param message Text to highlight.
+     */
+    public static highlight(message: string): string {
+        return `\x1b[34;1m${message}\x1b[0m`;
+    }
+
+    /**
      * Renders the given text as general output text.
      * @param output Text to render.
      * @param quote Optional. Quote to use for strings. Defaults to `''`.

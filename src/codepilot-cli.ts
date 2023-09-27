@@ -12,7 +12,7 @@ import { registerFunctions } from './functions';
 export async function run() {
     // prettier-ignore
     const args = await yargs(hideBin(process.argv))
-        .scriptName('vectra')
+        .scriptName('codepilot')
         .command('$0', 'chat mode', {}, async () => {
             // Ensure index exists and has keys
             const index = new CodeIndex();

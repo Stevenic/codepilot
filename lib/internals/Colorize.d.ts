@@ -14,6 +14,11 @@ export declare class Colorize {
      */
     static error(error: Error | string): string;
     /**
+     * Renders the given text with a highlight to call attention.
+     * @param message Text to highlight.
+     */
+    static highlight(message: string): string;
+    /**
      * Renders the given text as general output text.
      * @param output Text to render.
      * @param quote Optional. Quote to use for strings. Defaults to `''`.

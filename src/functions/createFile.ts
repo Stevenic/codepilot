@@ -2,6 +2,7 @@ import { ChatCompletionFunction } from "alphawave";
 import { Codepilot } from "../Codepilot";
 import * as fs from "fs/promises";
 import * as path from "path";
+import { Colorize } from "../internals";
 
 /**
  * Schema for a function that creates a file at the specified path.
@@ -47,6 +48,7 @@ export function addCreateFile(codepilot: Codepilot): void {
 
             // Add the file to the code index
             await codepilot.index.upsertDocument(filePath);
+            console.log(Colorize.highlight(`Created a new file: ${filePath}`));
             return `Successfully created file at ${filePath}`;
         } catch (error) {
             return `Failed to create file at ${filePath} due to the following error:\n${(error as Error).message}`;

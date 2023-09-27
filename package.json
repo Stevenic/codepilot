@@ -1,8 +1,8 @@
 {
     "name": "@stevenic/codepilot",
     "author": "Steven Ickman",
-    "description": "Codepilot is a programming buddy that's an expert on your codebase.",
-    "version": "0.4.0",
+    "description": "Codepilot is an AI powered programming buddy that's an expert on your codebase.",
+    "version": "0.5.0",
     "license": "MIT",
     "keywords": [
         "gpt",
