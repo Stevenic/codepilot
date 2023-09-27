@@ -3,6 +3,12 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { Colorize } from "./internals";
 
+const IGNORED_FILES = [
+    '.gif','.jpg','.jpeg','.png','.tiff','.tif','.ico','.svg','.bmp','.webp','.heif','.heic',
+    '.mpeg','.mp4','.webm','.mov','.mkv','.avi','.wmv','.mp3','.wav','.ogg','.midi','.mid','.amr',
+    '.zip','.tar','.gz','.rar','.7z','.xz','.bz2','.iso','.dmg','.bin','.exe','.apk','.torrent',
+];
+
 // LLM-REGION
 
 /**
@@ -241,9 +247,6 @@ export class CodeIndex {
             this._index = new LocalDocumentIndex({
                 folderPath,
                 embeddings,
-                chunkingConfig: {
-                    chunkSize: getOptimalChunkSize(this._config!.model),
-                }
             });
         }
 
@@ -295,7 +298,12 @@ export class CodeIndex {
         const fetcher = new FileFetcher();
         for (const source of this._config!.sources) {
             await fetcher.fetch(source, async (uri, text, docType) => {
-                // Ignore if extension not allowed
+                // Ignore binary files
+                if (IGNORED_FILES.includes(path.extname(uri))) {
+                    return true;
+                }
+
+                // Ignore any disallowed extensions
                 if (this._config!.extensions && docType && !this._config!.extensions!.includes(docType)) {
                     return true;
                 }
@@ -395,14 +403,30 @@ export class CodeIndex {
         await fs.writeFile(configPath, JSON.stringify(newConfig));
         this._config = newConfig;
     }
-}
 
-function getOptimalChunkSize(model: string): number {
-    if (model.startsWith('gpt-3.5-turbo-16k')) {
-        return 2000;
-    } else if (model.startsWith('gpt-3.5-turbo')) {
-        return 1000;
-    } else {
-        return 2000;
+    // LLM-REGION
+
+    /**
+     * Adds a document to the index.
+     * @param path Path to the document to add.
+     */
+    public async upsertDocument(path: string): Promise<void> {
+        if (!await this.isCreated()) {
+            throw new Error('Index has not been created yet. Please run `codepilot create` first.');
+        }
+        if (!await this.hasKeys()) {
+            throw new Error("A local vectra.keys file couldn't be found. Please run `codepilot set --key <your OpenAI key>`.");
+        }
+
+        // Ensure index is loaded
+        const index = await this.load();
+
+        // Fetch document
+        const fetcher = new FileFetcher();
+        await fetcher.fetch(path, async (uri, text, docType) => {
+            // Upsert document
+            await index.upsertDocument(uri, text, docType);
+            return true;
+        });
     }
 }

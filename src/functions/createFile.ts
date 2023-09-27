@@ -34,15 +34,22 @@ export function addCreateFile(codepilot: Codepilot): void {
 
         // Check if the file already exists
         if (await fs.access(path.join(process.cwd(), filePath)).then(() => true).catch(() => false)) {
-            return `File already exists at ${filePath}`;
+            return `A file already exists at that path.\nGive the user detailed instructions for how they should modify that file instead.`;
         }
 
         try {
+            // Create the directory path if it doesn't exist
+            const directoryPath = path.dirname(filePath);
+            await fs.mkdir(directoryPath, { recursive: true });
+
             // Write the code to the file
             await fs.writeFile(path.join(process.cwd(), filePath), contents);
+
+            // Add the file to the code index
+            await codepilot.index.upsertDocument(filePath);
             return `Successfully created file at ${filePath}`;
         } catch (error) {
-            return `Failed to create file at ${filePath}`;
+            return `Failed to create file at ${filePath} due to the following error:\n${(error as Error).message}`;
         }
     });
 }

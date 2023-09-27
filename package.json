@@ -2,7 +2,7 @@
     "name": "@stevenic/codepilot",
     "author": "Steven Ickman",
     "description": "Codepilot is a programming buddy that's an expert on your codebase.",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "license": "MIT",
     "keywords": [
         "gpt",

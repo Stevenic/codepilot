@@ -127,5 +127,10 @@ export declare class CodeIndex {
      * @param config Settings to update.
      */
     setConfig(config: Partial<CodeIndexConfig>): Promise<void>;
+    /**
+     * Adds a document to the index.
+     * @param path Path to the document to add.
+     */
+    upsertDocument(path: string): Promise<void>;
 }
 //# sourceMappingURL=CodeIndex.d.ts.map

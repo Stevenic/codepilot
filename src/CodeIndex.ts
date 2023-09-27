@@ -403,4 +403,30 @@ export class CodeIndex {
         await fs.writeFile(configPath, JSON.stringify(newConfig));
         this._config = newConfig;
     }
+
+    // LLM-REGION
+
+    /**
+     * Adds a document to the index.
+     * @param path Path to the document to add.
+     */
+    public async upsertDocument(path: string): Promise<void> {
+        if (!await this.isCreated()) {
+            throw new Error('Index has not been created yet. Please run `codepilot create` first.');
+        }
+        if (!await this.hasKeys()) {
+            throw new Error("A local vectra.keys file couldn't be found. Please run `codepilot set --key <your OpenAI key>`.");
+        }
+
+        // Ensure index is loaded
+        const index = await this.load();
+
+        // Fetch document
+        const fetcher = new FileFetcher();
+        await fetcher.fetch(path, async (uri, text, docType) => {
+            // Upsert document
+            await index.upsertDocument(uri, text, docType);
+            return true;
+        });
+    }
 }

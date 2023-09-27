@@ -21,6 +21,13 @@ export class Codepilot {
     }
 
     /**
+     * Gets the code index.
+     */
+    public get index(): CodeIndex {
+        return this._index;
+    }
+
+    /**
      * Registers a new function to be used in the chat completion.
      * @remarks
      * This is used to add new capabilities to Codepilot's chat feature
@@ -131,7 +138,7 @@ export class Codepilot {
             temperature: this._index.config!.temperature,
             max_input_tokens: this._index.config!.max_input_tokens,
             max_tokens: this._index.config!.max_tokens,
-            logRequests: true
+            //logRequests: true
         };
 
         if (functions.length > 0) {

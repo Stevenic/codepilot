@@ -12,6 +12,10 @@ export declare class Codepilot {
      */
     constructor(index: CodeIndex);
     /**
+     * Gets the code index.
+     */
+    get index(): CodeIndex;
+    /**
      * Registers a new function to be used in the chat completion.
      * @remarks
      * This is used to add new capabilities to Codepilot's chat feature

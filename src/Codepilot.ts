@@ -21,6 +21,13 @@ export class Codepilot {
     }
 
     /**
+     * Gets the code index.
+     */
+    public get index(): CodeIndex {
+        return this._index;
+    }
+
+    /**
      * Registers a new function to be used in the chat completion.
      * @remarks
      * This is used to add new capabilities to Codepilot's chat feature
